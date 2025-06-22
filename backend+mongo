@@ -1,0 +1,29 @@
+version: "2.5"
+services: 
+  mongo:
+    image: mongo
+    container_name: mongo_test
+    ports: 
+      - "27017:27017"
+    volumes: 
+      - mongo_volume:/data/db
+    networks:
+      - test_net
+
+  app:
+    image: shuklax/complex:v2
+    container_name: complex2
+    ports: 
+      - "3000:3000"
+    environment:
+      - MONGO_URI=mongodb://mongo_test:27017
+    depends_on:
+      - mongo
+    networks:
+      - test_net
+
+volumes:
+  mongo_volume:
+
+networks:
+  test_net:
