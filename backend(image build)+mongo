@@ -1,0 +1,33 @@
+version: "2.5"
+services: 
+  mongo:
+    image: mongo
+    container_name: mongo_test
+    ports: 
+      - "27017:27017"
+    volumes: 
+      - mongo_volume:/data/db
+    networks:
+      - my_net
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: complex2
+    ports: 
+      - "3000:3000"
+    environment:
+      - MONGO_URI=mongodb://mongo_test:27017
+    depends_on:
+      - mongo
+    networks:
+      - my_net
+
+volumes:
+  mongo_volume:
+    name: mongo_volume
+
+networks:
+  my_net:
+    name: test_net
